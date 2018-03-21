@@ -1,4 +1,4 @@
 #!/bin/sh
 
-echo "WSO2 API Gateway"
+echo "Java"
 exit 0
