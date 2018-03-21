@@ -7,7 +7,6 @@ The ‘Deploy to Heroku’ button enables users to deploy WSO2 API Gateway on He
 
 Try WSO2 API Gateway with direct deployment on Heroku:
 
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/wso2/cloud-heroku-api-gateway/tree/master)
 
 ## Documentation
 
