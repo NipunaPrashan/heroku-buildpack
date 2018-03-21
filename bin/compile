@@ -4,4 +4,3 @@ indent() {
   sed -u 's/^/       /'
 }
 
-mvn clean install -f ../pom.xml
