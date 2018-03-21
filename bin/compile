@@ -4,3 +4,4 @@ indent() {
   sed -u 's/^/       /'
 }
 
+mvn clean install
