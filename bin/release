@@ -3,5 +3,5 @@
 cat << EOF
 ---
 default_process_types:
-  hello: cat hello.txt
+  web: sh configure-gateway.sh
 EOF
