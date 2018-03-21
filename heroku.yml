@@ -1,0 +1,5 @@
+build:
+  languages:
+    - java
+run:
+  web: sh configure-gateway.sh
