@@ -1,19 +1,13 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # bin/compile <build-dir> <cache-dir> <env-dir>
 
-indent() {
-  sed -u 's/^/       /'
-}
+# fail fast
+set -e
 
-# absolute path
-BP_DIR=$(cd $(dirname $0)/..; pwd)
+BP_DIR=$(cd $(dirname $0)/..; pwd) # absolute path
 BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
-
-echo $BUILD_DIR
-echo $CACHE_DIR
-echo $ENV_DIR
 
 source $BP_DIR/lib/common.sh
 source $BP_DIR/lib/maven.sh
@@ -21,6 +15,10 @@ source $BP_DIR/lib/maven.sh
 export_env $ENV_DIR "." "JAVA_OPTS|JAVA_TOOL_OPTIONS"
 
 install_jdk ${BUILD_DIR}
+
+[ -n "$(find ${BUILD_DIR} -type f -name "*.kt")" ] && mcount "kotlin.source"
+[ -n "$(find ${BUILD_DIR} -type f -name "*.groovy")" ] && mcount "groovy.source"
+
 run_mvn "compile" $BUILD_DIR $CACHE_DIR
 
 if has_maven_wrapper $BUILD_DIR; then
