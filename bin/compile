@@ -1,6 +1,10 @@
 #!/bin/sh
 # bin/compile <build-dir> <cache-dir> <env-dir>
 
+indent() {
+  sed -u 's/^/       /'
+}
+
 # absolute path
 BP_DIR=$(cd $(dirname $0)/..; pwd)
 BUILD_DIR=$1
