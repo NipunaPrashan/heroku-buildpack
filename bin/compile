@@ -98,3 +98,4 @@ fi
 sh \$UNZIPPED_FILE_NAME/bin/configure-gateway.sh
 EOT
 
+ls
