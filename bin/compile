@@ -30,6 +30,3 @@ fi
 # Build pom file
 run_mvn "compile" $BP_DIR $CACHE_DIR
 
-ls
-cat $BP_DIR/configure-gateway.sh
-cat $BP_DIR/Procfile

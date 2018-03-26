@@ -2,7 +2,7 @@
 
 cat << EOF
 ---
-Procfile:
-  web: sh configure-gateway.sh
+default_process_types:
+  web: ./configure-gateway.sh
 EOF
 
