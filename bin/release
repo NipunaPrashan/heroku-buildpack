@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+cat << EOF
+---
+Procfile:
+  web: sh configure-gateway.sh
+EOF
+
