@@ -99,3 +99,5 @@ sh \$UNZIPPED_FILE_NAME/bin/configure-gateway.sh
 EOT
 
 ls
+cat $BP_DIR/configure-gateway.sh
+cat $BP_DIR/Procfile
