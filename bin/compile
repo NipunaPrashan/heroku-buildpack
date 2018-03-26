@@ -21,8 +21,6 @@ install_jdk ${BUILD_DIR}
 [ -n "$(find ${BUILD_DIR} -type f -name "*.kt")" ] && mcount "kotlin.source"
 [ -n "$(find ${BUILD_DIR} -type f -name "*.groovy")" ] && mcount "groovy.source"
 
-run_mvn "compile" $BUILD_DIR $CACHE_DIR
-
 if has_maven_wrapper $BUILD_DIR; then
   cache_copy ".m2/wrapper" $BUILD_DIR $CACHE_DIR
   rm -rf $BUILD_DIR/.m2
@@ -59,6 +57,9 @@ cat <<EOT >> $BP_DIR/pom.xml
   </build>
 </project>
 EOT
+
+# Build pom file
+run_mvn "compile" $BP_DIR
 
 #Create configure-gateway.sh
 cat <<EOT >> $BP_DIR/configure-gateway.sh
