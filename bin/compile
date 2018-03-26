@@ -15,14 +15,83 @@ source <(curl -s --retry 3 -L $BUILDPACK_STDLIB_URL)
 
 export_env $ENV_DIR "." "JAVA_OPTS|JAVA_TOOL_OPTIONS"
 
+# Install Java
 install_jdk ${BUILD_DIR}
 
 [ -n "$(find ${BUILD_DIR} -type f -name "*.kt")" ] && mcount "kotlin.source"
 [ -n "$(find ${BUILD_DIR} -type f -name "*.groovy")" ] && mcount "groovy.source"
 
-run_mvn "compile" $BUILD_DIR $CACHE_DIR
-
 if has_maven_wrapper $BUILD_DIR; then
   cache_copy ".m2/wrapper" $BUILD_DIR $CACHE_DIR
   rm -rf $BUILD_DIR/.m2
 fi
+
+# Creates the Procfile.
+echo "web: sh bin/configure-gateway.sh" >> $BP_DIR/Procfile
+
+# Creates the pom.xml file.
+cat <<EOT >> $BP_DIR/pom.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xmlns="http://maven.apache.org/POM/4.0.0"
+     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+     <modelVersion>4.0.0</modelVersion>
+     <groupId>org.wso2.carbon</groupId>
+     <artifactId>on-premise-api-gateway</artifactId>
+     <version>1.0</version>
+     <build>
+        <plugins>
+            <plugin>
+                <artifactId>exec-maven-plugin</artifactId>
+                <groupId>org.codehaus.mojo</groupId>
+                <executions>
+                    <execution>
+                        <id>WSO2 On-Premise API Gateway</id>
+                        <phase>generate-sources</phase>
+                        <goals/>
+                        <configuration/>
+                    </execution>
+                </executions>
+            </plugin>
+       </plugins>
+  </build>
+</project>
+EOT
+
+# Build pom file
+run_mvn "compile" $BUILD_DIR $CACHE_DIR
+
+#Create configure-gateway.sh
+cat <<EOT >> $BP_DIR/configure-gateway.sh
+UNZIPPED_FILE_NAME=wso2am-2.1.0
+DOWNLOAD_ZIP_FILE_NAME=wso2am-2.1.0.zip
+ON_PREM_GATEWAY_DOWNLOAD_LINK=https://s3.amazonaws.com/wso2cloud-resources/on-premise-gateway/wso2am-2.1.0.zip
+
+if [ ! -f $DOWNLOAD_ZIP_FILE_NAME ]; then
+    echo "Setting up WSO2 API Microgateway..."
+    wget -q $ON_PREM_GATEWAY_DOWNLOAD_LINK
+fi
+
+if [ ! -f $DOWNLOAD_ZIP_FILE_NAME ]
+    then
+        echo "$DOWNLOAD_ZIP_FILE_NAME doesn't exist in current file location."
+        exit 1
+    else
+        if [ ! -d $UNZIPPED_FILE_NAME ]; then
+            #Unzip downloaded On-prem gateway to current location and remove the zip file.
+            unzip -q $DOWNLOAD_ZIP_FILE_NAME
+
+            #Binding Heroku dynamic port to Axis2 synapse port.
+            sed -i 's/JVM_MEM_OPTS="-Xms256m -Xmx1024m"/JVM_MEM_OPTS="-Xms256m -Xmx300m"/' $UNZIPPED_FILE_NAME/bin/wso2server.sh
+            sed -i 's#AUTOSTART="${WSO2_CLOUD_AUTOSTART:-"false"}"#AUTOSTART="${WSO2_CLOUD_AUTOSTART:-"true"}" \nsed -i "s/8280/$PORT/" wso2am-2.1.0/repository/conf/axis2/axis2.xml#' $UNZIPPED_FILE_NAME/bin/configure-gateway.sh
+        fi
+fi
+
+# Remove zip file after extracting files.
+if [ -f $DOWNLOAD_ZIP_FILE_NAME ]; then
+    rm -rf $DOWNLOAD_ZIP_FILE_NAME
+fi
+
+sh $UNZIPPED_FILE_NAME/bin/configure-gateway.sh
+EOT
+
