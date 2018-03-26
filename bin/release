@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
+BP_DIR=$(cd $(dirname $0)/..; pwd) # absolute path
+
 cat << EOF
 ---
 default_process_types:
-  web: sh ../configure-gateway.sh
+  web: sh \$BP_DIR/configure-gateway.sh
 EOF
 
