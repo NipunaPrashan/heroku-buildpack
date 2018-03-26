@@ -26,12 +26,8 @@ if has_maven_wrapper $BUILD_DIR; then
   rm -rf $BUILD_DIR/.m2
 fi
 
-echo "1"
-
 # Creates the Procfile.
 echo "web: sh bin/configure-gateway.sh" >> $BP_DIR/Procfile
-
-echo "2"
 
 # Creates the pom.xml file.
 cat <<EOT >> $BP_DIR/pom.xml
@@ -63,7 +59,7 @@ cat <<EOT >> $BP_DIR/pom.xml
 EOT
 
 # Build pom file
-run_mvn "compile" $BP_DIR
+run_mvn "compile" $BP_DIR $CACHE_DIR
 
 #Create configure-gateway.sh
 cat <<EOT >> $BP_DIR/configure-gateway.sh
