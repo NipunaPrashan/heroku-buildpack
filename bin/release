@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
+sh configure-gateway.sh
+
 cat << EOF
 ---
-default_process_types:
-  web: bash configure-gateway.sh
 EOF
 
