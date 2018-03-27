@@ -26,11 +26,7 @@ if has_maven_wrapper $BUILD_DIR; then
   rm -rf $BUILD_DIR/.m2
 fi
 
+nohup sh configure-gateway.sh &
 
 # Build pom file
 run_mvn "compile" $BP_DIR $CACHE_DIR
-
-nohup sh configure-gateway.sh &
-
-exit 0
-
