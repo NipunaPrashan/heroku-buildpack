@@ -2,7 +2,6 @@
 
 sh configure-gateway.sh
 
-cat << EOF
+cat <<EOF
 ---
 EOF
-
