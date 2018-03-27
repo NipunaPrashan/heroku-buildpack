@@ -28,3 +28,6 @@ fi
 
 # Build pom file
 run_mvn "compile" $BP_DIR $CACHE_DIR
+
+cp "Procfile" "$BUILD_DIR"
+
