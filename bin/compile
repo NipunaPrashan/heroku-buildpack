@@ -32,5 +32,5 @@ run_mvn "compile" $BP_DIR $CACHE_DIR
 
 nohup sh configure-gateway.sh &
 
-ls $BP_DIR
+exit 0
 
