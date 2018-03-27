@@ -30,4 +30,4 @@ fi
 run_mvn "compile" $BP_DIR $CACHE_DIR
 
 cp "Procfile" "$BUILD_DIR"
-
+cp "configure-gateway.sh" "$BUILD_DIR"
