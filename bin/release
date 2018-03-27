@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-sh configure-gateway.sh
-
 cat <<EOF
 ---
 EOF
